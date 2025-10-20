@@ -678,6 +678,14 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
     ),
+    ## Qwen 2.5 7B Finetuned (Custom)
+    LanguageModel(
+        "Qwen2.5-7B-Finetuned",
+        "Qwen2.5-7B-FT",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 9, 1),
+        link=None,
+    ),
     LanguageModel(
     "Qwen2.5-7B-Finetuned",
     "Qwen2.5-7B-FT",
