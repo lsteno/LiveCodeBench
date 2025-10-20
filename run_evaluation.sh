@@ -10,6 +10,12 @@
 #SBATCH --time=02:00:00
 #SBATCH --mem=64GB
 
+# IMPORTANT: Before submitting this job, make sure you've pre-downloaded the dataset
+# on the head node (which has internet access) by running:
+#   source .venv/bin/activate
+#   python3 -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='release_v5')"
+# This caches the dataset so offline compute nodes can access it.
+
 # Print job information
 echo "Job ID: $SLURM_JOB_ID"
 echo "Node: $SLURM_NODELIST"
@@ -43,9 +49,9 @@ nvidia-smi
 export CUDA_VISIBLE_DEVICES=0
 export TOKENIZERS_PARALLELISM=false
 
-# Set HuggingFace cache to use pre-downloaded models (for offline mode)
-export HF_HOME="$HOME/GSD-finetune/lora/model_cache"
-export TRANSFORMERS_OFFLINE=1
+# Set HuggingFace cache directory (datasets will be cached here)
+export HF_HOME="$HOME/.cache/huggingface"
+export HF_DATASETS_CACHE="$HOME/.cache/huggingface/datasets"
 
 # Create output directory if it doesn't exist
 mkdir -p output

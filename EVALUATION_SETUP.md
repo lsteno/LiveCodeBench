@@ -8,33 +8,54 @@
 
 ## Setup Steps
 
-### 1. Register Your Model (Already Done)
+### 1. Register The Model (Done)
 
-Your finetuned model has been registered in `lcb_runner/lm_styles.py` as:
+The finetuned model has been registered in `lcb_runner/lm_styles.py` as:
 - **Model Name**: `Qwen2.5-7B-Finetuned`
-- **Model Repr**: `Qwen2.5-7B-FT` (used in output filenames)
+- **Model Repr**: `Qwen2.5-7B-FT` 
 - **Style**: `CodeQwenInstruct` (uses Qwen chat template)
 
 ### 2. Prepare the Environment on the Cluster
 
-On the head node or login node:
+On the login node (head node with internet access):
 
 ```bash
 # Navigate to LiveCodeBench directory
-cd ~/Developer/GitHub/LiveCodeBench
+cd ~/LiveCodeBench
 
-# Create virtual environment if not already done
-uv venv --python 3.11
+# Create virtual environment matching the cluster's Python version
+# Check available versions with: module avail python
+module load python/3.10.7
+python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies
-uv pip install -e .
+pip install -e .
 
 # Create logs directory
 mkdir -p logs
 ```
 
-### 3. Submit the Evaluation Job
+### 3. Pre-download the Dataset (IMPORTANT - Must do on head node)
+
+Since compute nodes don't have internet access, download the dataset first:
+
+```bash
+# Make sure you're on the head node with internet and venv activated
+source .venv/bin/activate
+
+# Download the benchmark dataset
+python3 -c "
+from datasets import load_dataset
+print('Downloading LiveCodeBench dataset...')
+dataset = load_dataset('livecodebench/code_generation_lite', split='test', version_tag='release_v5')
+print(f'Downloaded {len(dataset)} problems successfully!')
+"
+```
+
+This will cache the dataset in `~/.cache/huggingface/datasets/` so it's available offline on compute nodes.
+
+### 4. Submit the Evaluation Job
 
 ```bash
 # Make the script executable
@@ -44,7 +65,7 @@ chmod +x run_evaluation.sh
 sbatch run_evaluation.sh
 ```
 
-### 4. Monitor the Job
+### 5. Monitor the Job
 
 ```bash
 # Check job status
@@ -115,6 +136,26 @@ python -m lcb_runner.evaluation.compute_scores \
 ```
 
 ## Troubleshooting
+
+### Python version mismatch error:
+
+If you see `AssertionError: SRE module mismatch`, your venv Python version doesn't match the loaded module.
+
+**Solution**: Make sure the Python version in the SLURM script matches your venv:
+```bash
+# Check your venv Python version
+source .venv/bin/activate
+python --version  # e.g., Python 3.10.7
+
+# Make sure run_evaluation.sh loads the same version:
+# module load python/3.10.7  (line 19 in run_evaluation.sh)
+```
+
+### Dataset not found error (offline nodes):
+
+If you see `ConnectionError: Couldn't reach 'livecodebench/code_generation_lite' on the Hub (OfflineModeIsEnabled)`:
+
+**Solution**: Pre-download the dataset on the head node (Step 3 above) before submitting the job.
 
 ### If the job fails due to memory:
 
