@@ -683,15 +683,8 @@ LanguageModelList: list[LanguageModel] = [
         "Qwen2.5-7B-Finetuned",
         "Qwen2.5-7B-FT",
         LMStyle.CodeQwenInstruct,
-        datetime(2024, 9, 1),
+        datetime(2025, 10, 19),
         link=None,
-    ),
-    LanguageModel(
-    "Qwen2.5-7B-Finetuned",
-    "Qwen2.5-7B-FT",
-    LMStyle.CodeQwenInstruct,
-    datetime(2025, 10, 19),
-    link=None, 
     ),
     LanguageModel(
         "Qwen/Qwen2.5-Coder-32B-Instruct",
