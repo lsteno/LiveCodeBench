@@ -11,7 +11,8 @@
 #SBATCH --mem=64GB
 
 # IMPORTANT: Before submitting this job, make sure you've pre-downloaded the dataset
-# on the head node (which has internet access). See EVALUATION_SETUP.md Step 3.
+# on the head node (which has internet access). Download with:
+#   python3 -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v5_v6', download_mode='force_redownload')"
 # The dataset must be fully cached in ~/.cache/huggingface/datasets/ 
 # This job runs in OFFLINE MODE - it cannot access the internet.
 
@@ -64,14 +65,14 @@ mkdir -p logs
 echo "Starting LiveCodeBench evaluation..."
 echo "Model path: ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged"
 echo "Scenario: codegeneration"
-echo "Release version: release_v5_v6"
+echo "Release version: v5_v6 (only problems from v5 and v6, not earlier versions)"
 
 python -m lcb_runner.runner.main \
     --model Qwen2.5-7B-Finetuned \
     --local_model_path ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged \
     --scenario codegeneration \
     --evaluate \
-    --release_version release_v5_v6 \
+    --release_version v5_v6 \
     --n 10 \
     --temperature 0.2 \
     --tensor_parallel_size 1 \

@@ -48,7 +48,7 @@ source .venv/bin/activate
 python3 -c "
 from datasets import load_dataset
 print('Downloading LiveCodeBench dataset...')
-dataset = load_dataset('livecodebench/code_generation_lite', split='test', version_tag='release_v5')
+dataset = load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v5_v6')
 print(f'Downloaded {len(dataset)} problems successfully!')
 "
 ```
