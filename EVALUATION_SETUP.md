@@ -1,31 +1,32 @@
-# Running LiveCodeBench Evaluation on Your Finetuned Qwen 2.5 7B
+# Running LiveCodeBench Evaluation on Finetuned Qwen 2.5 7B
 
 ## Prerequisites
 
 1. **Merged model** at: `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`
-2. **Virtual environment** set up in this directory (`.venv/`)
-3. **SLURM cluster** access with the `students` partition
+2. **SLURM cluster** access with the `students` partition
+3. **Internet access** on the head/login node for setup
 
 ## Setup Steps
 
-### 1. Register The Model (Done)
+### 1. Model Registration
 
 The finetuned model has been registered in `lcb_runner/lm_styles.py` as:
 - **Model Name**: `Qwen2.5-7B-Finetuned`
 - **Model Repr**: `Qwen2.5-7B-FT` 
 - **Style**: `CodeQwenInstruct` (uses Qwen chat template)
 
-### 2. Prepare the Environment on the Cluster
+### 2. Environment Setup
 
-On the login node (head node with internet access):
+On the login node (which has internet access):
 
 ```bash
 # Navigate to LiveCodeBench directory
 cd ~/LiveCodeBench
 
-# Create virtual environment matching the cluster's Python version
-# Check available versions with: module avail python
+# Load Python module
 module load python/3.10.7
+
+# Create virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
@@ -36,36 +37,13 @@ pip install -e .
 mkdir -p logs
 ```
 
-### 3. Pre-download the Dataset (IMPORTANT - Must do on head node)
-
-Since compute nodes don't have internet access, download the dataset first:
+### 3. Submit the Evaluation Job
 
 ```bash
-# Make sure you're on the head node with internet and venv activated
-source .venv/bin/activate
-
-# Download the benchmark dataset
-python3 -c "
-from datasets import load_dataset
-print('Downloading LiveCodeBench dataset...')
-dataset = load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v5_v6')
-print(f'Downloaded {len(dataset)} problems successfully!')
-"
-```
-
-This will cache the dataset in `~/.cache/huggingface/datasets/` so it's available offline on compute nodes.
-
-### 4. Submit the Evaluation Job
-
-```bash
-# Make the script executable
-chmod +x run_evaluation.sh
-
-# Submit to SLURM
 sbatch run_evaluation.sh
 ```
 
-### 5. Monitor the Job
+### 4. Monitor the Job
 
 ```bash
 # Check job status
@@ -78,58 +56,52 @@ tail -f logs/eval_<JOB_ID>.out
 tail -f logs/eval_<JOB_ID>.err
 ```
 
-## Understanding the Evaluation Script
+## Evaluation Configuration
 
-The `run_evaluation.sh` script runs with these parameters:
+The `run_evaluation.sh` script is configured with:
 
-- **Model**: Your finetuned Qwen 2.5 7B from `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`
-- **Scenario**: `codegeneration` (generates and evaluates Python code)
-- **Dataset**: `release_v5` (880 problems from May 2023 to Jan 2025)
+- **Model**: `Qwen2.5-7B-Finetuned` (from `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`)
+- **Scenario**: `codegeneration` (code generation and evaluation)
+- **Dataset Version**: `v5_v6` (includes v5 and v6 problems only)
 - **Samples per problem**: 10 (`--n 10`)
-- **Temperature**: 0.2 (for diverse but focused generation)
-- **GPU**: 1 GPU with tensor parallelism disabled
-- **Evaluation**: Automated with 12 parallel processes
-- **Timeout**: 10 seconds per test case
-- **Caching**: Enabled to save time on repeated runs
+- **Temperature**: 0.2
+- **Precision**: `bfloat16`
+- **Resources**: 1 GPU, 16 CPUs, 64GB RAM
+- **Time Limit**: 2 hours
+- **Evaluation**: 12 parallel processes, 10s timeout per test case
+- **Caching**: Enabled for faster reruns
 
 ## Expected Runtime
 
-- **Generation**: ~4-8 hours for 880 problems × 10 samples (depends on model speed)
-- **Evaluation**: ~2-4 hours for running all test cases
-- **Total**: Expect 6-12 hours for full run (48 hour limit is conservative)
+- **Generation + Evaluation**: 1.5-2 hours (actual runtime depends on model speed)
+- The 2-hour time limit is sufficient for the configured workload
 
 ## Output Files
 
 Results will be saved in `output/Qwen2.5-7B-FT/`:
 
-1. **`codegeneration_10_0.2.json`**
-   - Raw generated code for each problem
-   - Contains all 10 samples per problem
-
-2. **`codegeneration_10_0.2_eval.json`**
-   - Summary metrics (pass@1, pass@5, pass@10)
-   - Overall performance statistics
-
-3. **`codegeneration_10_0.2_eval_all.json`**
-   - Detailed results for each problem
-   - Shows which test cases passed/failed
-   - Useful for debugging and analysis
+1. **`codegeneration_10_0.2.json`** - Raw generated code (all 10 samples per problem)
+2. **`codegeneration_10_0.2_eval.json`** - Summary metrics (pass@1, pass@5, pass@10)
+3. **`codegeneration_10_0.2_eval_all.json`** - Detailed per-problem results
 
 ## Analyzing Results
 
-After the job completes, you can analyze results by time window:
+After the job completes, analyze results by time window:
 
 ```bash
-# Get scores for all problems
+# Activate environment
+source .venv/bin/activate
+
+# All problems
 python -m lcb_runner.evaluation.compute_scores \
     --eval_all_file output/Qwen2.5-7B-FT/codegeneration_10_0.2_eval_all.json
 
-# Get scores for problems after Sep 2023 (to avoid contamination)
+# Problems after Sep 2023 (avoid potential contamination)
 python -m lcb_runner.evaluation.compute_scores \
     --eval_all_file output/Qwen2.5-7B-FT/codegeneration_10_0.2_eval_all.json \
     --start_date 2023-09-01
 
-# Get scores for recent problems only (2024 onwards)
+# Only 2024+ problems
 python -m lcb_runner.evaluation.compute_scores \
     --eval_all_file output/Qwen2.5-7B-FT/codegeneration_10_0.2_eval_all.json \
     --start_date 2024-01-01
@@ -137,64 +109,51 @@ python -m lcb_runner.evaluation.compute_scores \
 
 ## Troubleshooting
 
-### Python version mismatch error:
+### Python version mismatch
 
-If you see `AssertionError: SRE module mismatch`, your venv Python version doesn't match the loaded module.
+**Error**: `AssertionError: SRE module mismatch`
 
-**Solution**: Make sure the Python version in the SLURM script matches your venv:
+**Solution**: Ensure the Python module in `run_evaluation.sh` matches your venv:
 ```bash
 # Check your venv Python version
 source .venv/bin/activate
-python --version  # e.g., Python 3.10.7
-
-# Make sure run_evaluation.sh loads the same version:
-# module load python/3.10.7  (line 19 in run_evaluation.sh)
+python --version  # Should be 3.10.7
 ```
 
-### Dataset not found error (offline nodes):
+### Continuing from partial run
 
-If you see `ConnectionError: Couldn't reach 'livecodebench/code_generation_lite' on the Hub (OfflineModeIsEnabled)`:
+Add `--continue_existing` flag to reuse existing completions:
+```bash
+# In run_evaluation.sh, add to the python command:
+--continue_existing
+```
 
-**Solution**: Pre-download the dataset on the head node (Step 3 above) before submitting the job.
+### Memory issues
 
-### If the job fails due to memory:
-
-Reduce batch size or use gradient checkpointing by editing the script to add:
+Add memory configuration before the python command:
 ```bash
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 ```
 
-### If you need to continue from a partial run:
+### Slow evaluation
 
-Edit `run_evaluation.sh` and add the `--continue_existing` flag:
-```bash
-python -m lcb_runner.runner.main \
-    --model Qwen2.5-7B-Finetuned \
-    --local_model_path ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged \
-    --scenario codegeneration \
-    --evaluate \
-    --continue_existing \
-    ... # rest of flags
-```
-
-### If evaluation is too slow:
-
-Adjust these parameters in the script:
+Adjust these parameters in `run_evaluation.sh`:
 - `--num_process_evaluate 8` (reduce from 12)
-- `--timeout 15` (increase if tests are timing out unfairly)
+- `--timeout 15` (increase timeout if tests are failing unfairly)
 
-### If model loading fails:
+### Model loading fails
 
-Check that:
-1. Model path is correct: `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`
-2. Model files include: `config.json`, `pytorch_model.bin` or `.safetensors`, `tokenizer.json`
-3. You have proper permissions to access the model directory
+Verify:
+1. Model path exists: `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`
+2. Contains: `config.json`, model weights (`.safetensors` or `.bin`), tokenizer files
+3. You have read permissions
 
-## Running Other Scenarios
+## Additional Scenarios
 
-Once code generation works, you can try:
+After code generation evaluation, you can test other scenarios:
 
 ### Self-Repair
+Requires existing code generation results (`--codegen_n` must match original run):
 ```bash
 python -m lcb_runner.runner.main \
     --model Qwen2.5-7B-Finetuned \
@@ -225,7 +184,7 @@ python -m lcb_runner.runner.main \
 
 ## Notes
 
-- The evaluation uses **VLLM** for efficient inference
-- Results are automatically saved and can be resumed with `--continue_existing`
-- The benchmark uses **test cases pruned** for faster evaluation (use `--not_fast` for full tests)
-- All 880 problems will be evaluated unless you use `--debug` (which runs only 15)
+- Uses **VLLM** for efficient inference
+- Results auto-save; resume with `--continue_existing`
+- Uses **pruned test cases** by default (faster). Use `--not_fast` for full test suite
+- `--debug` flag runs only 15 problems for quick testing
