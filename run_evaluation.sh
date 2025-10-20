@@ -11,10 +11,9 @@
 #SBATCH --mem=64GB
 
 # IMPORTANT: Before submitting this job, make sure you've pre-downloaded the dataset
-# on the head node (which has internet access) by running:
-#   source .venv/bin/activate
-#   python3 -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='release_v5')"
-# This caches the dataset so offline compute nodes can access it.
+# on the head node (which has internet access). See EVALUATION_SETUP.md Step 3.
+# The dataset must be fully cached in ~/.cache/huggingface/datasets/ 
+# This job runs in OFFLINE MODE - it cannot access the internet.
 
 # Print job information
 echo "Job ID: $SLURM_JOB_ID"
@@ -52,6 +51,10 @@ export TOKENIZERS_PARALLELISM=false
 # Set HuggingFace cache directory (datasets will be cached here)
 export HF_HOME="$HOME/.cache/huggingface"
 export HF_DATASETS_CACHE="$HOME/.cache/huggingface/datasets"
+
+# CRITICAL: Force offline mode - no internet access on compute nodes
+export HF_DATASETS_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
 
 # Create output directory if it doesn't exist
 mkdir -p output
