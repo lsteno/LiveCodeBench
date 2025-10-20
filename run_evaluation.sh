@@ -64,14 +64,14 @@ mkdir -p logs
 echo "Starting LiveCodeBench evaluation..."
 echo "Model path: ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged"
 echo "Scenario: codegeneration"
-echo "Release version: release_v5"
+echo "Release version: release_v5_v6"
 
 python -m lcb_runner.runner.main \
     --model Qwen2.5-7B-Finetuned \
     --local_model_path ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged \
     --scenario codegeneration \
     --evaluate \
-    --release_version release_v5 \
+    --release_version release_v5_v6 \
     --n 10 \
     --temperature 0.2 \
     --tensor_parallel_size 1 \
