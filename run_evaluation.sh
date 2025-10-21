@@ -61,31 +61,91 @@ export TRANSFORMERS_OFFLINE=1
 mkdir -p output
 mkdir -p logs
 
-# Run LiveCodeBench evaluation
+# Default values (can be overridden with CLI args)
+MODEL_NAME="Qwen2.5-7B-Finetuned"
+LOCAL_MODEL_PATH="$HOME/GSD-finetune/lora/qwen2.5-7b-instruct-merged"
+SCENARIO="codegeneration"
+RELEASE_VERSION="v6"
+N=10
+TEMPERATURE=0.2
+TENSOR_PARALLEL_SIZE=1
+NUM_PROCESS_EVALUATE=12
+TIMEOUT=10
+DTYPE="bfloat16"
+
+usage() {
+    echo "Usage: $0 [--model MODEL_NAME] [--local-model-path PATH] [--size-suffix SUFFIX] [--n N] [--temperature T]"
+    echo ""
+    echo "Examples:"
+    echo "  # default (7B)"
+    echo "  $0"
+    echo ""
+    echo "  # use a 0.5B variant located under the same directory structure"
+    echo "  $0 --model Qwen2.5-0.5B-Finetuned --local-model-path ~/GSD-finetune/lora/qwen2.5-0.5b-instruct-merged --temperature 0.2"
+    exit 1
+}
+
+# Simple CLI parsing (accepts long options)
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --model)
+            MODEL_NAME="$2"; shift 2;;
+        --local-model-path)
+            LOCAL_MODEL_PATH="$2"; shift 2;;
+        --size-suffix)
+            # convenience: append a size suffix to the model name and adjust path if desired
+            SUFFIX="$2"
+            MODEL_NAME="${MODEL_NAME%%-*}${SUFFIX}${MODEL_NAME#*-}"
+            shift 2;;
+        --n)
+            N="$2"; shift 2;;
+        --temperature)
+            TEMPERATURE="$2"; shift 2;;
+        --help|-h)
+            usage;;
+        *)
+            echo "Unknown option: $1"; usage;;
+    esac
+done
+
 echo "Starting LiveCodeBench evaluation..."
-echo "Model path: ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged"
-echo "Scenario: codegeneration"
-echo "Release version: v5_v6 (only problems from v5 and v6, not earlier versions)"
+echo "Model name: $MODEL_NAME"
+echo "Model path: $LOCAL_MODEL_PATH"
+echo "Scenario: $SCENARIO"
+echo "Release version: $RELEASE_VERSION (only problems from v5 and v6, not earlier versions)"
+
+# Validate local model path exists
+if [ ! -e "$LOCAL_MODEL_PATH" ]; then
+    echo "Error: local model path does not exist: $LOCAL_MODEL_PATH" >&2
+    echo "If your model is stored under ~/GSD-finetune/lora/, pass --local-model-path to point to the model directory." >&2
+    exit 2
+fi
+
+if [ ! -r "$LOCAL_MODEL_PATH" ]; then
+    echo "Error: local model path is not readable: $LOCAL_MODEL_PATH" >&2
+    exit 3
+fi
 
 python -m lcb_runner.runner.main \
-    --model Qwen2.5-7B-Finetuned \
-    --local_model_path ~/GSD-finetune/lora/qwen2.5-7b-instruct-merged \
-    --scenario codegeneration \
+    --model "$MODEL_NAME" \
+    --local_model_path "$LOCAL_MODEL_PATH" \
+    --scenario "$SCENARIO" \
     --evaluate \
-    --release_version v5_v6 \
-    --n 10 \
-    --temperature 0.2 \
-    --tensor_parallel_size 1 \
+    --release_version "$RELEASE_VERSION" \
+    --n "$N" \
+    --temperature "$TEMPERATURE" \
+    --tensor_parallel_size "$TENSOR_PARALLEL_SIZE" \
     --use_cache \
-    --num_process_evaluate 12 \
-    --timeout 10 \
-    --dtype bfloat16
+    --num_process_evaluate "$NUM_PROCESS_EVALUATE" \
+    --timeout "$TIMEOUT" \
+    --dtype "$DTYPE"
 
 echo "Evaluation completed at: $(date)"
 
-# Print location of results
+# Print location of results (best-effort guess based on model name)
+OUT_DIR_NAME=$(echo "$MODEL_NAME" | sed 's/[^A-Za-z0-9._-]/_/g')
 echo ""
-echo "Results saved in:"
-echo "  - output/Qwen2.5-7B-FT/codegeneration_10_0.2.json"
-echo "  - output/Qwen2.5-7B-FT/codegeneration_10_0.2_eval.json"
-echo "  - output/Qwen2.5-7B-FT/codegeneration_10_0.2_eval_all.json"
+echo "Results saved in (approx):"
+echo "  - output/${OUT_DIR_NAME}/${SCENARIO}_${N}_${TEMPERATURE}.json"
+echo "  - output/${OUT_DIR_NAME}/${SCENARIO}_${N}_${TEMPERATURE}_eval.json"
+echo "  - output/${OUT_DIR_NAME}/${SCENARIO}_${N}_${TEMPERATURE}_eval_all.json"
