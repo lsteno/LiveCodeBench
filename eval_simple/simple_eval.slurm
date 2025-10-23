@@ -13,6 +13,4 @@ module load python/3.10.7
 cd ~/LiveCodeBench
 source .venv/bin/activate
 
-mkdir -p logs
-
 bash eval_simple/run_eval_simple.sh "$@"
