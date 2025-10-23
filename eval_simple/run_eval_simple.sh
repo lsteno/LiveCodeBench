@@ -38,7 +38,7 @@ if [[ -z "$MODEL" || -z "$LOCAL_PATH" ]]; then
   exit 1
 fi
 
-source .venv/bin/activate
+source ~/LiveCodeBench/.venv/bin/activate
 
 python -m lcb_runner.runner.main \
   --model "$MODEL" \
