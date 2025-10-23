@@ -199,11 +199,18 @@ def main():
                 for instance, (
                     outputs_list,
                     extracted_list,
-                ), graded_list, meta, original_code_list in zip(
-                    benchmark, combined_results, graded, metadatas, original_code_lists
+                    graded_list,
+                ), meta, original_code_list in zip(
+                    benchmark,
+                    combined_results,
+                    graded,
+                    metadatas,
+                    original_code_lists,
                 )
             ]
-
+            if metrics and old_eval_results:
+                old_eval_results
+                metrics[2] = old_eval_results[2] + metrics[2]
         else:
             save_eval_results = [
                 instance.insert_output_evaluation(
