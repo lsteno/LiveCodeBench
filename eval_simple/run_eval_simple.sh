@@ -1,8 +1,7 @@
 #!/bin/bash
-# Minimal helper to run LiveCodeBench evaluation with a local model path.
-
+# Minimal LiveCodeBench evaluation helper.
 # Usage:
-#   bash run_eval_simple.sh \
+#   bash eval_simple/run_eval_simple.sh \
 #     --model Qwen2.5-0.5B-Finetuned \
 #     --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged
 
