@@ -11,8 +11,9 @@
 ### 1. Model Registration
 
 The finetuned model has been registered in `lcb_runner/lm_styles.py` as:
+
 - **Model Name**: `Qwen2.5-7B-Finetuned`
-- **Model Repr**: `Qwen2.5-7B-FT` 
+- **Model Repr**: `Qwen2.5-7B-FT`
 - **Style**: `CodeQwenInstruct` (uses Qwen chat template)
 
 ### 2. Environment Setup
@@ -114,6 +115,7 @@ python -m lcb_runner.evaluation.compute_scores \
 **Error**: `AssertionError: SRE module mismatch`
 
 **Solution**: Ensure the Python module in `run_evaluation.sh` matches your venv:
+
 ```bash
 # Check your venv Python version
 source .venv/bin/activate
@@ -123,6 +125,7 @@ python --version  # Should be 3.10.7
 ### Continuing from partial run
 
 Add `--continue_existing` flag to reuse existing completions:
+
 ```bash
 # In run_evaluation.sh, add to the python command:
 --continue_existing
@@ -131,6 +134,7 @@ Add `--continue_existing` flag to reuse existing completions:
 ### Memory issues
 
 Add memory configuration before the python command:
+
 ```bash
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 ```
@@ -138,12 +142,14 @@ export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 ### Slow evaluation
 
 Adjust these parameters in `run_evaluation.sh`:
+
 - `--num_process_evaluate 8` (reduce from 12)
 - `--timeout 15` (increase timeout if tests are failing unfairly)
 
 ### Model loading fails
 
 Verify:
+
 1. Model path exists: `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`
 2. Contains: `config.json`, model weights (`.safetensors` or `.bin`), tokenizer files
 3. You have read permissions
@@ -153,7 +159,9 @@ Verify:
 After code generation evaluation, you can test other scenarios:
 
 ### Self-Repair
+
 Requires existing code generation results (`--codegen_n` must match original run):
+
 ```bash
 python -m lcb_runner.runner.main \
     --model Qwen2.5-7B-Finetuned \
@@ -165,6 +173,7 @@ python -m lcb_runner.runner.main \
 ```
 
 ### Test Output Prediction
+
 ```bash
 python -m lcb_runner.runner.main \
     --model Qwen2.5-7B-Finetuned \
@@ -174,6 +183,7 @@ python -m lcb_runner.runner.main \
 ```
 
 ### Code Execution
+
 ```bash
 python -m lcb_runner.runner.main \
     --model Qwen2.5-7B-Finetuned \
