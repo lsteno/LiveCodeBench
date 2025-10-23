@@ -38,6 +38,13 @@ if [[ -z "$MODEL" || -z "$LOCAL_PATH" ]]; then
   exit 1
 fi
 
+# Offline by default (override HF_HOME/HF_DATASETS_CACHE before calling if desired)
+export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
+export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$HF_HOME/datasets}"
+export HF_DATASETS_OFFLINE="${HF_DATASETS_OFFLINE:-1}"
+export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
+export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
+
 source ~/LiveCodeBench/.venv/bin/activate
 
 python -m lcb_runner.runner.main \
