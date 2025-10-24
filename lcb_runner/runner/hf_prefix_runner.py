@@ -6,6 +6,7 @@ from typing import Iterable, List
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers.utils import logging as hf_logging
 from peft import PeftModel
 
 from lcb_runner.runner.base_runner import BaseRunner
@@ -64,11 +65,20 @@ class HFPrefixRunner(BaseRunner):
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
         dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
-        base_model = AutoModelForCausalLM.from_pretrained(
-            base_model_name,
-            torch_dtype=dtype,
-            trust_remote_code=args.trust_remote_code,
-        )
+        hf_logging.set_verbosity_error()
+
+        try:
+            base_model = AutoModelForCausalLM.from_pretrained(
+                base_model_name,
+                dtype=dtype,
+                trust_remote_code=args.trust_remote_code,
+            )
+        except TypeError:
+            base_model = AutoModelForCausalLM.from_pretrained(
+                base_model_name,
+                torch_dtype=dtype,
+                trust_remote_code=args.trust_remote_code,
+            )
         base_model.to(self.device)
 
         self.hf_model = PeftModel.from_pretrained(

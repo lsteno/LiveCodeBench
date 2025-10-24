@@ -34,7 +34,8 @@ cd ~/LiveCodeBench
 source .venv/bin/activate
 bash eval_simple/run_eval_simple.sh \
   --model Qwen2.5-0.5B-FT \
-  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged
+  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged \
+  --multiprocess 4
 ```
 
 The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you can override them with extra flags (see file header).
@@ -45,7 +46,8 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
   --model Qwen2.5-0.5B-FT \
-  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged
+  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged \
+  --multiprocess 4
 ```
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.
@@ -61,6 +63,7 @@ python3 -m lcb_runner.evaluation.compute_scores \
 
 ## Notes
 
-- The helper just wraps `python -m lcb_runner.runner.main`; feel free to add flags (e.g. `--continue_existing`) inside the shell script.
+- The helper just wraps `python -m lcb_runner.runner.main`; feel free to add flags (e.g. `--continue_existing`, `--multiprocess`, `--release`).
 - Keep datasets cached on the head node; compute nodes run offline.
 - Works for any model registered in `lcb_runner/lm_styles.py`. Prefix-tuned adapters (e.g. `Qwen2.5-0.5B-Prefix`) are loaded through the new Hugging Face runner, so pass the adapter directory via `--local-path` instead of merged weights. Because the runner loads the base model from Hugging Face caches, make sure `HF_HOME` (or `TRANSFORMERS_CACHE`) points at the directory where you downloaded the base model (for example `export HF_HOME=~/GSD-finetune/lora_simple/model_cache`) before launching `run_eval_simple.sh`/`simple_eval.slurm`.
+- Scenario naming: `Scenario.codegeneration_10_0.2` means 10 samples per problem with temperature 0.2. Use the `--release` flag (e.g. `--release v6_full`) if you want the larger ~1k problem set.
