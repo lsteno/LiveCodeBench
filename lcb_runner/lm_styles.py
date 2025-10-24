@@ -693,6 +693,20 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2025, 10, 21),
         link=None,
     ),
+    LanguageModel(
+        "Qwen2.5-0.5B-QLoRA",
+        "Qwen2.5-0.5B-QLoRA",
+        LMStyle.CodeQwenInstruct,
+        datetime(2025, 10, 21),
+        link=None,
+    ),
+    LanguageModel(
+        "Qwen2.5-0.5B-BitFit",
+        "Qwen2.5-0.5B-BitFit",
+        LMStyle.CodeQwenInstruct,
+        datetime(2025, 10, 21),
+        link=None,
+    ),
     ## Qwen 2.5 7B Finetuned (Custom)
     LanguageModel(
         "Qwen2.5-7B-Finetuned",
