@@ -709,7 +709,7 @@ LanguageModelList: list[LanguageModel] = [
         link=None,
     ),
     LanguageModel(
-        "Qwen/Qwen2.5-0.5B-Instruct",
+        "Qwen2.5-0.5B-Prefix",
         "Qwen2.5-0.5B-Prefix",
         LMStyle.PrefixHF,
         datetime(2025, 10, 21),
