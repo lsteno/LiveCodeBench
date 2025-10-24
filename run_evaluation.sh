@@ -63,7 +63,7 @@ mkdir -p logs
 
 # Default values (can be overridden with CLI args)
 MODEL_NAME="Qwen2.5-7B-Finetuned"
-LOCAL_MODEL_PATH="$HOME/GSD-finetune/lora/qwen2.5-7b-instruct-merged"
+LOCAL_MODEL_PATH="~/GSD-finetune/prefix_tuning_simple/runs/qwen2.5-0.5b-prefix-merged"
 SCENARIO="codegeneration"
 RELEASE_VERSION="v6"
 N=10
