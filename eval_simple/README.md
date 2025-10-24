@@ -62,4 +62,4 @@ python3 -m lcb_runner.evaluation.compute_scores \
 
 - The helper just wraps `python -m lcb_runner.runner.main`; feel free to add flags (e.g. `--continue_existing`) inside the shell script.
 - Keep datasets cached on the head node; compute nodes run offline.
-- Works for any model registered in `lcb_runner/lm_styles.py`.
+- Works for any model registered in `lcb_runner/lm_styles.py`. Prefix-tuned adapters (e.g. `Qwen2.5-0.5B-Prefix`) are loaded through the new Hugging Face runner, so pass the adapter directory via `--local-path` instead of merged weights.

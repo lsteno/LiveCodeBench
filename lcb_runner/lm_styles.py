@@ -33,6 +33,7 @@ class LMStyle(Enum):
     DeepSeekR1 = "DeepSeekR1"
 
     TogetherAI = "TogetherAI"
+    PrefixHF = "PrefixHF"
 
 
 @dataclass
@@ -704,6 +705,13 @@ LanguageModelList: list[LanguageModel] = [
         "Qwen2.5-0.5B-BitFit",
         "Qwen2.5-0.5B-BitFit",
         LMStyle.CodeQwenInstruct,
+        datetime(2025, 10, 21),
+        link=None,
+    ),
+    LanguageModel(
+        "Qwen/Qwen2.5-0.5B-Instruct",
+        "Qwen2.5-0.5B-Prefix",
+        LMStyle.PrefixHF,
         datetime(2025, 10, 21),
         link=None,
     ),
