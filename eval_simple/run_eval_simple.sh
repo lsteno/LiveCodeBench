@@ -13,6 +13,7 @@ RELEASE="v6"
 SCENARIO="codegeneration"
 N=10
 TEMPERATURE=0.2
+MULTIPROCESS=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -22,6 +23,7 @@ while [[ $# -gt 0 ]]; do
     --scenario) SCENARIO="$2"; shift 2 ;;
     --n) N="$2"; shift 2 ;;
     --temperature) TEMPERATURE="$2"; shift 2 ;;
+    --multiprocess) MULTIPROCESS="$2"; shift 2 ;;
     -h|--help)
       echo "Usage: $0 --model NAME --local-path DIR [--release v6] [--scenario codegeneration] [--n 10] [--temperature 0.2]"
       exit 0
@@ -47,11 +49,27 @@ export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
 
 source ~/LiveCodeBench/.venv/bin/activate
 
-python -m lcb_runner.runner.main \
-  --model "$MODEL" \
-  --local_model_path "$LOCAL_PATH" \
-  --scenario "$SCENARIO" \
-  --evaluate \
-  --release_version "$RELEASE" \
-  --n "$N" \
-  --temperature "$TEMPERATURE"
+CMD=(
+  python
+  -m
+  lcb_runner.runner.main
+  --model
+  "$MODEL"
+  --local_model_path
+  "$LOCAL_PATH"
+  --scenario
+  "$SCENARIO"
+  --evaluate
+  --release_version
+  "$RELEASE"
+  --n
+  "$N"
+  --temperature
+  "$TEMPERATURE"
+)
+
+if [[ -n "$MULTIPROCESS" ]]; then
+  CMD+=(--multiprocess "$MULTIPROCESS")
+fi
+
+"${CMD[@]}"
