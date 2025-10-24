@@ -12,7 +12,7 @@
 
 # IMPORTANT: Before submitting this job, make sure you've pre-downloaded the dataset
 # on the head node (which has internet access). Download with:
-#   python3 -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v5_v6', download_mode='force_redownload')"
+#   python3 -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v6', download_mode='force_redownload')"
 # The dataset must be fully cached in ~/.cache/huggingface/datasets/ 
 # This job runs in OFFLINE MODE - it cannot access the internet.
 
