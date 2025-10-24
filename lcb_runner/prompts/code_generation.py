@@ -320,7 +320,7 @@ def format_prompt_generation(
         prompt += f"{get_deepseekcode_question_template_answer(question)}"
         return prompt
 
-    if LanguageModelStyle == LMStyle.CodeQwenInstruct:
+    if LanguageModelStyle in [LMStyle.CodeQwenInstruct, LMStyle.PrefixHF]:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_CODEQWEN}\n\n"
         prompt += f"{get_codeqwen_question_template_answer(question)}"
         return prompt

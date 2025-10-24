@@ -20,6 +20,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install -e .
+pip install peft
 pip install 'datasets<3.2.0'
 
 # Cache evaluation dataset once (needs internet)
@@ -62,4 +63,4 @@ python3 -m lcb_runner.evaluation.compute_scores \
 
 - The helper just wraps `python -m lcb_runner.runner.main`; feel free to add flags (e.g. `--continue_existing`) inside the shell script.
 - Keep datasets cached on the head node; compute nodes run offline.
-- Works for any model registered in `lcb_runner/lm_styles.py`. Prefix-tuned adapters (e.g. `Qwen2.5-0.5B-Prefix`) are loaded through the new Hugging Face runner, so pass the adapter directory via `--local-path` instead of merged weights.
+- Works for any model registered in `lcb_runner/lm_styles.py`. Prefix-tuned adapters (e.g. `Qwen2.5-0.5B-Prefix`) are loaded through the new Hugging Face runner, so pass the adapter directory via `--local-path` instead of merged weights. Because the runner loads the base model from Hugging Face caches, make sure `HF_HOME` (or `TRANSFORMERS_CACHE`) points at the directory where you downloaded the base model (for example `export HF_HOME=~/GSD-finetune/lora_simple/model_cache`) before launching `run_eval_simple.sh`/`simple_eval.slurm`.
