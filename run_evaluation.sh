@@ -63,7 +63,7 @@ mkdir -p logs
 
 # Default values (can be overridden with CLI args)
 MODEL_NAME="Qwen2.5-3B-Finetuned"
-LOCAL_MODEL_PATH="~/.cache/huggingface/hub/models--Qwen--Qwen2.5-3B-Instruct"
+LOCAL_MODEL_PATH="~/GSD-finetune/prefix_simple/model_cache/models--Qwen--Qwen2.5-3B-Instruct/snapshots/aa8e72537993ba99e69dfaafa59ed015b17504d1"
 SCENARIO="codegeneration"
 RELEASE_VERSION="v6"
 N=10
