@@ -51,7 +51,7 @@ export TOKENIZERS_PARALLELISM=false
 
 # Set HuggingFace cache directory (datasets will be cached here)
 export HF_HOME="$HOME/.cache/huggingface"
-export HF_DATASETS_CACHE="$HOME/.cache/huggingface/datasets"
+export HF_DATASETS_CACHE=".cache/huggingface/datasets/livecodebench___code_generation_lite/release_latest-version_tag\=release_latest-version_tag=v6/"
 
 # CRITICAL: Force offline mode - no internet access on compute nodes
 export HF_DATASETS_OFFLINE=1
