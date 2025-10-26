@@ -51,7 +51,7 @@ export TOKENIZERS_PARALLELISM=false
 
 # Set HuggingFace cache directory (datasets will be cached here)
 export HF_HOME="$HOME/.cache/huggingface"
-export HF_DATASETS_CACHE=".cache/huggingface/datasets/livecodebench___code_generation_lite/release_latest-version_tag\=release_latest-version_tag=v6/"
+export HF_DATASETS_CACHE=".cache/huggingface/datasets/"
 
 # CRITICAL: Force offline mode - no internet access on compute nodes
 export HF_DATASETS_OFFLINE=1
@@ -63,7 +63,7 @@ mkdir -p logs
 
 # Default values (can be overridden with CLI args)
 MODEL_NAME="Qwen2.5-3B-Finetuned"
-LOCAL_MODEL_PATH="~/GSD-finetune/prefix_simple/model_cache/models--Qwen--Qwen2.5-3B-Instruct/snapshots/aa8e72537993ba99e69dfaafa59ed015b17504d1"
+LOCAL_MODEL_PATH="~/GSD-finetune/model_cache/models--Qwen--Qwen2.5-3B-Instruct/snapshots/aa8e72537993ba99e69dfaafa59ed015b17504d1"
 SCENARIO="codegeneration"
 RELEASE_VERSION="v6"
 N=10
@@ -73,17 +73,6 @@ NUM_PROCESS_EVALUATE=12
 TIMEOUT=10
 DTYPE="bfloat16"
 
-usage() {
-    echo "Usage: $0 [--model MODEL_NAME] [--local-model-path PATH] [--size-suffix SUFFIX] [--n N] [--temperature T]"
-    echo ""
-    echo "Examples:"
-    echo "  # default (7B)"
-    echo "  $0"
-    echo ""
-    echo "  # use a 0.5B variant located under the same directory structure"
-    echo "  $0 --model Qwen2.5-0.5B-Finetuned --local-model-path ~/GSD-finetune/lora/qwen2.5-0.5b-instruct-merged --temperature 0.2"
-    exit 1
-}
 
 # Simple CLI parsing (accepts long options)
 while [[ $# -gt 0 ]]; do
@@ -112,7 +101,7 @@ echo "Starting LiveCodeBench evaluation..."
 echo "Model name: $MODEL_NAME"
 echo "Model path: $LOCAL_MODEL_PATH"
 echo "Scenario: $SCENARIO"
-echo "Release version: $RELEASE_VERSION (only problems from v5 and v6, not earlier versions)"
+echo "Release version: $RELEASE_VERSION"
 
 # Expand tilde in LOCAL_MODEL_PATH if present
 LOCAL_MODEL_PATH="${LOCAL_MODEL_PATH/#\~/$HOME}"

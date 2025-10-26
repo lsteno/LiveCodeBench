@@ -58,20 +58,6 @@ tail -f logs/eval_<JOB_ID>.err
 ```
 
 ## Evaluation Configuration
-
-The `run_evaluation.sh` script is configured with:
-
-- **Model**: `Qwen2.5-7B-Finetuned` (from `~/GSD-finetune/lora/qwen2.5-7b-instruct-merged`)
-- **Scenario**: `codegeneration` (code generation and evaluation)
-- **Dataset Version**: `v5_v6` (includes v5 and v6 problems only)
-- **Samples per problem**: 10 (`--n 10`)
-- **Temperature**: 0.2
-- **Precision**: `bfloat16`
-- **Resources**: 1 GPU, 16 CPUs, 64GB RAM
-- **Time Limit**: 2 hours
-- **Evaluation**: 12 parallel processes, 10s timeout per test case
-- **Caching**: Enabled for faster reruns
-
 ## Expected Runtime
 
 - **Generation + Evaluation**: 1.5-2 hours (actual runtime depends on model speed)
