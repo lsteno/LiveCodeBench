@@ -114,6 +114,9 @@ echo "Model path: $LOCAL_MODEL_PATH"
 echo "Scenario: $SCENARIO"
 echo "Release version: $RELEASE_VERSION (only problems from v5 and v6, not earlier versions)"
 
+# Expand tilde in LOCAL_MODEL_PATH if present
+LOCAL_MODEL_PATH="${LOCAL_MODEL_PATH/#\~/$HOME}"
+
 # Validate local model path exists
 if [ ! -e "$LOCAL_MODEL_PATH" ]; then
     echo "Error: local model path does not exist: $LOCAL_MODEL_PATH" >&2
