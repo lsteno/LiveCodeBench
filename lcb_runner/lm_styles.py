@@ -649,7 +649,7 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/Qwen/Qwen2-72B-Instruct",
     ),
         LanguageModel(
-        "Qwen/Qwen2.5-3B-Finetuned",
+        "Qwen2.5-3B-Finetuned",
         "Qwen2-FT-3B",
         LMStyle.CodeQwenInstruct,
         datetime(2023, 8, 30),
