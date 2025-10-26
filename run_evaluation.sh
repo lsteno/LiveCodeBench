@@ -63,7 +63,7 @@ mkdir -p logs
 
 # Default values (can be overridden with CLI args)
 MODEL_NAME="Qwen2.5-3B-Finetuned"
-LOCAL_MODEL_PATH="~/GSD-finetune/lora_simple/runs/qwen2.5-3b-merged"
+LOCAL_MODEL_PATH="~/.cache/huggingface/hub/models--Qwen--Qwen2.5-3B-Instruct"
 SCENARIO="codegeneration"
 RELEASE_VERSION="v6"
 N=10

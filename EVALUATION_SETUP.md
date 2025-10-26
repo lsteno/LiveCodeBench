@@ -95,7 +95,7 @@ source .venv/bin/activate
 
 # All problems
 python -m lcb_runner.evaluation.compute_scores \
-    --eval_all_file output/Qwen2.5-7B-FT/codegeneration_10_0.2_eval_all.json
+    --eval_all_file ~/LiveCodeBench/output/Qwen2-FT-3B/Scenario.codegeneration_10_0.2_eval_all.json
 
 # Problems after Sep 2023 (avoid potential contamination)
 python -m lcb_runner.evaluation.compute_scores \
