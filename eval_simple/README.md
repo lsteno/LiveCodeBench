@@ -44,7 +44,7 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 
 ```bash
 cd ~/LiveCodeBench
-sbatch eval_simple/simple_eval.slurm --model Qwen2.5-0.5B-FT --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged --multiprocess 4
+sbatch eval_simple/simple_eval.slurm --model Qwen2.5-1.5B-FT --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-1.5b-merged --multiprocess 4
 ```
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.
@@ -55,7 +55,7 @@ Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_
 
 ```bash
 python3 -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/Qwen2.5-0.5B-FT/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/Qwen2.5-1.5B-FT/Scenario.codegeneration_10_0.2_eval_all.json
 ```
 
 ## Notes
