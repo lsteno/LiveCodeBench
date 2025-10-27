@@ -24,7 +24,7 @@ pip install peft
 pip install 'datasets<3.2.0'
 
 # Cache evaluation dataset once (needs internet)
-python -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v6', trust_remote_code=True)"
+python -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='release_v6', trust_remote_code=True)"
 ```
 
 ## 2. Run evaluation (interactive)
