@@ -1,9 +1,9 @@
 #!/bin/bash
 # Minimal LiveCodeBench evaluation helper.
 # Usage:
-#   bash eval_simple/run_eval_simple.sh \
-#     --model Qwen2.5-1.5B-Finetuned \
-#     --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-merged
+#   sbatch eval_simple/run_eval_simple.sh \
+     --model Qwen2.5-1.5B-QLoRA \
+     --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-merged
 
 set -euo pipefail
 
@@ -47,6 +47,15 @@ export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
 
 source ~/LiveCodeBench/.venv/bin/activate
 
+# Create logs directory if it doesn't exist
+mkdir -p logs
+
+# Generate log filename with timestamp and model name
+LOG_FILE="logs/${MODEL}_${SCENARIO}_${RELEASE}_$(date +%Y%m%d_%H%M%S).log"
+
+echo "Logging to: $LOG_FILE"
+
+# Run python with output redirected to log file
 python -m lcb_runner.runner.main \
   --model "$MODEL" \
   --local_model_path "$LOCAL_PATH" \
@@ -54,4 +63,5 @@ python -m lcb_runner.runner.main \
   --evaluate \
   --release_version "$RELEASE" \
   --n "$N" \
-  --temperature "$TEMPERATURE"
+  --temperature "$TEMPERATURE" \
+  2>&1 | tee "$LOG_FILE"
