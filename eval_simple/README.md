@@ -24,7 +24,7 @@ pip install peft
 pip install 'datasets<3.2.0'
 
 # Cache evaluation dataset once (needs internet)
-python -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='release_v6', trust_remote_code=True)"
+python -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v6', trust_remote_code=True)"
 ```
 
 ## 2. Run evaluation (interactive)
@@ -44,10 +44,7 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 
 ```bash
 cd ~/LiveCodeBench
-sbatch eval_simple/simple_eval.slurm \
-  --model Qwen2.5-0.5B-FT \
-  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged \
-  --multiprocess 4
+sbatch eval_simple/simple_eval.slurm --model Qwen2.5-0.5B-FT --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged --multiprocess 4
 ```
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.
