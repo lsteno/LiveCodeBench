@@ -50,12 +50,16 @@ source ~/LiveCodeBench/.venv/bin/activate
 # Create logs directory if it doesn't exist
 mkdir -p logs
 
-# Generate log filename with timestamp and model name
-LOG_FILE="logs/${MODEL}_${SCENARIO}_${RELEASE}_$(date +%Y%m%d_%H%M%S).log"
+# Generate log and error filenames with timestamp and model name
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+LOG_FILE="logs/${MODEL}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.log"
+ERR_FILE="logs/${MODEL}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.err"
 
 echo "Logging to: $LOG_FILE"
+echo "Errors to: $ERR_FILE"
 
-# Run python with output redirected to log file
+# Run python with stdout to log file and stderr to err file
+# Also display both in terminal using tee
 python -m lcb_runner.runner.main \
   --model "$MODEL" \
   --local_model_path "$LOCAL_PATH" \
@@ -64,4 +68,4 @@ python -m lcb_runner.runner.main \
   --release_version "$RELEASE" \
   --n "$N" \
   --temperature "$TEMPERATURE" \
-  2>&1 | tee "$LOG_FILE"
+  > >(tee "$LOG_FILE") 2> >(tee "$ERR_FILE" >&2)
