@@ -51,7 +51,7 @@ export TOKENIZERS_PARALLELISM=false
 
 # Set HuggingFace cache directory (datasets will be cached here)
 export HF_HOME="$HOME/.cache/huggingface"
-export HF_DATASETS_CACHE=".cache/huggingface/datasets/"
+export HF_DATASETS_CACHE="$HOME/.cache/huggingface/datasets/"
 
 # CRITICAL: Force offline mode - no internet access on compute nodes
 export HF_DATASETS_OFFLINE=1

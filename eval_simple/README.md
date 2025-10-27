@@ -32,8 +32,8 @@ python -c "from datasets import load_dataset; load_dataset('livecodebench/code_g
 cd ~/LiveCodeBench
 source .venv/bin/activate
 bash eval_simple/run_eval_simple.sh \
-  --model Qwen2.5-0.5B-Finetuned \
-  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged
+  --model Qwen2.5-3B-Finetuned \
+  --local-path ~/GSD-finetune/model_cache/models--Qwen--Qwen2.5-3B-Instruct/snapshots/aa8e72537993ba99e69dfaafa59ed015b17504d1
 ```
 
 The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you can override them with extra flags (see file header).
@@ -43,8 +43,9 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 ```bash
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen2.5-0.5B-Finetuned \
-  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged
+  --model Qwen/Qwen2.5-0.5B-Instruct \
+  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-3b-merged
+
 ```
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.

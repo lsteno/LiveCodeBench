@@ -79,9 +79,10 @@ After the job completes, analyze results by time window:
 # Activate environment
 source .venv/bin/activate
 
+scp s3221407@hpc-head1.ewi.utwente.nl:~/LiveCodeBench/output/Qwen2.5-FT-3B/Scenario.codegeneration_10_0.2_eval_all.json ~/Downloads/
 # All problems
 python -m lcb_runner.evaluation.compute_scores \
-    --eval_all_file ~/LiveCodeBench/output/Qwen2-FT-3B/Scenario.codegeneration_10_0.2_eval_all.json
+    --eval_all_file ~/LiveCodeBench/output/Qwen2.5-Ins-0.5B/Scenario.codegeneration_10_0.2_eval_all.json
 
 # Problems after Sep 2023 (avoid potential contamination)
 python -m lcb_runner.evaluation.compute_scores \

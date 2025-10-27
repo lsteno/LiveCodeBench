@@ -2,8 +2,8 @@
 # Minimal LiveCodeBench evaluation helper.
 # Usage:
 #   bash eval_simple/run_eval_simple.sh \
-#     --model Qwen2.5-0.5B-Finetuned \
-#     --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-0.5b-merged
+#     --model Qwen2.5-1.5B-Finetuned \
+#     --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-merged
 
 set -euo pipefail
 
