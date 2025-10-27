@@ -964,9 +964,10 @@ LanguageModelList: list[LanguageModel] = [
     ),
 ]
 
-LanguageModelStore: dict[str, LanguageModel] = {
-    lm.model_name: lm for lm in LanguageModelList
-}
+LanguageModelStore: dict[str, LanguageModel] = {}
+for lm in LanguageModelList:
+    LanguageModelStore[lm.model_name] = lm
+    LanguageModelStore[lm.model_repr] = lm
 
 if __name__ == "__main__":
     print(list(LanguageModelStore.keys()))
