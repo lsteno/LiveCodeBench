@@ -55,8 +55,8 @@ fi
   
 # Create logs directory next to this script if it doesn't exist
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-LOG_DIR="$SCRIPT_DIR/../logs"
-mkdir -p "$LOG_DIR"
+LOG_DIR="../logs"
+
 
 # Generate log and error filenames with timestamp and a filesystem-safe model name
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
