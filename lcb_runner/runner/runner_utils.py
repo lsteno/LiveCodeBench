@@ -50,6 +50,10 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.fireworks_runner import FireWorksRunner
 
         return FireWorksRunner(args, model)
+    if model.model_style == LMStyle.HuggingFacePrefix:
+        from lcb_runner.runner.hf_peft_runner import HFPefTRunner
+
+        return HFPefTRunner(args, model)
     elif model.model_style in []:
         raise NotImplementedError(
             f"Runner for language model style {model.model_style} not implemented yet"

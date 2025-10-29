@@ -259,6 +259,12 @@ def format_prompt_test_output(
             f"{get_generic_question_template_test_completion(question, testcase_input)}"
         )
         return prompt
+    elif LanguageModelStyle == LMStyle.HuggingFacePrefix:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_CHAT_GENERIC}\n"
+        prompt += (
+            f"{get_generic_question_template_test_completion(question, testcase_input)}"
+        )
+        return prompt
     elif LanguageModelStyle == LMStyle.MistralWeb:
         chat_messages = [
             {

@@ -85,6 +85,23 @@ Additionally, `--use_cache` flag can be used to cache the generated outputs and 
 
 For closed API models,  `--multiprocess` flag can be used to parallelize queries to API servers (adjustable according to rate limits).
 
+#### Prefix-Tuned Hugging Face Models
+
+LiveCodeBench now includes a runner for Hugging Face models fine-tuned with [PEFT](https://github.com/huggingface/peft) prefix adapters. To use it:
+
+1. Register a model entry in `lcb_runner/lm_styles.py` with `LMStyle.HuggingFacePrefix` so the CLI can discover it.
+2. Launch the benchmark with the PEFT adapter path:
+
+   ```bash
+   python -m lcb_runner.runner.main \
+       --model {registered_model_name} \
+       --local_model_path {/path/to/base/model} \
+       --peft_adapter_path {/path/to/prefix/adapter} \
+       --scenario codegeneration
+   ```
+
+The runner loads the base Hugging Face checkpoint, attaches the prefix-tuning adapter for inference, and respects the existing sampling flags (`--n`, `--temperature`, `--top_p`, `--max_tokens`, and `--stop`).
+
 #### Evaluation
 
 We compute `pass@1` and `pass@5` metrics for model evaluations.

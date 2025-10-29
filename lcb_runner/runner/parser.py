@@ -20,6 +20,12 @@ def get_args():
         help="If you have a local model, specify it here in conjunction with --model",
     )
     parser.add_argument(
+        "--peft_adapter_path",
+        type=str,
+        default=None,
+        help="Path to the PEFT adapter (e.g. prefix-tuning) to load on top of the base model",
+    )
+    parser.add_argument(
         "--trust_remote_code",
         action="store_true",
         help="trust_remote_code option used in huggingface models",

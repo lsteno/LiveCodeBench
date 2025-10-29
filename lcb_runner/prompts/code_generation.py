@@ -335,7 +335,7 @@ def format_prompt_generation(
         prompt += f"{get_deepseek_r1_question_template_answer(question)}"
         return prompt
 
-    if LanguageModelStyle == LMStyle.GenericBase:
+    if LanguageModelStyle in [LMStyle.GenericBase, LMStyle.HuggingFacePrefix]:
         prompt = get_base_model_question_template_answer(question)
         return prompt
 

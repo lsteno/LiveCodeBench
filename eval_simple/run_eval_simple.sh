@@ -44,9 +44,9 @@ export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$HF_HOME/datasets}"
 export HF_DATASETS_OFFLINE="${HF_DATASETS_OFFLINE:-1}"
 export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
-
+export LOCAL_PATH="~/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k"
 source ~/LiveCodeBench/.venv/bin/activate
-
+  
 # Create logs directory if it doesn't exist
 mkdir -p logs
 
@@ -68,4 +68,5 @@ python -m lcb_runner.runner.main \
   --release_version "$RELEASE" \
   --n "$N" \
   --temperature "$TEMPERATURE" \
+  --peft_adapter_path "$LOCAL_PATH" \
   2>&1 | tee "$LOG_FILE"

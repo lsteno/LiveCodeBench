@@ -33,6 +33,7 @@ class LMStyle(Enum):
     DeepSeekR1 = "DeepSeekR1"
 
     TogetherAI = "TogetherAI"
+    HuggingFacePrefix = "HuggingFacePrefix"
 
 
 @dataclass

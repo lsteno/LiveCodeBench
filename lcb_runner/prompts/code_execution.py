@@ -177,6 +177,8 @@ def format_prompt_execution_base(
         )
     elif LanguageModelStyle == LMStyle.DracarysQwen:
         return prompt
+    elif LanguageModelStyle == LMStyle.HuggingFacePrefix:
+        return prompt
     else:
         raise NotImplementedError(
             f"LanguageModelStyle {LanguageModelStyle} not implemented"
