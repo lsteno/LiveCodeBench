@@ -1,6 +1,6 @@
 # LiveCodeBench Eval Simple
 
-A trimmed-down entry point for running LiveCodeBench on locally fine-tuned models without touching the full HPC scripts.
+A trimmed-down entry point for running LiveCodeBench on locally fine-tuned models without touching the full HPC scripts
 
 ## Files
 
