@@ -679,6 +679,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
     ),
     LanguageModel(
+    model_name="Qwen2.5-1.5B-Prefix5k",
+    model_repr="Qwen2.5-1.5B-Prefix5k",
+    model_style=LMStyle.HuggingFacePrefix,
+    release_date=datetime(2025, 10, 1),
+    link=None,
+    ),
+    LanguageModel(
         "Qwen/Qwen2.5-32B-Instruct",
         "Qwen2.5-Ins-32B",
         LMStyle.CodeQwenInstruct,
