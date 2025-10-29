@@ -68,5 +68,4 @@ python -m lcb_runner.runner.main \
   --release_version "$RELEASE" \
   --n "$N" \
   --temperature "$TEMPERATURE" \
-  --multiprocess 4 \
   2>&1 | tee "$LOG_FILE"
