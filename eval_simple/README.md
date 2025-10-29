@@ -33,8 +33,9 @@ cd ~/LiveCodeBench
 source .venv/bin/activate
 bash eval_simple/run_eval_simple.sh \
   --model Qwen2.5-3B-Finetuned \
-  --local-path ~/GSD-finetune/model_cache/models--Qwen--Qwen2.5-3B-Instruct/snapshots/aa8e72537993ba99e69dfaafa59ed015b17504d1
+  --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-5k-merged
 ```
+
 
 The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you can override them with extra flags (see file header).
 
@@ -43,10 +44,13 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 ```bash
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen/Qwen2.5-0.5B-Instruct \
-  --local-path ~/GSD-finetune/lora_simple/runs/qwen2.5-3b-merged
-
+  --model Qwen/Qwen2.5-72B-Instruct \
+  --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-5k-merged
 ```
+sbatch eval_simple/run_eval_simple.sh \
+  --model Qwen/Qwen2.5-72B-Instruct \
+  --local-path ~/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k \
+  --multiprocess 4
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.
 
@@ -56,7 +60,7 @@ Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_
 
 ```bash
 python -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/Qwen2.5-0.5B-Finetuned/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/1.5B-lora-5k-r4/Scenario.codegeneration_10_0.2_eval_all.json
 ```
 
 ## Notes

@@ -59,7 +59,7 @@ echo "Logging to: $LOG_FILE"
 echo "Errors to: $ERR_FILE"
 
 # Run python with stdout to log file and stderr to err file
-# Also display both in terminal using tee
+# Using explicit redirection that works in Slurm non-interactive environments
 python -m lcb_runner.runner.main \
   --model "$MODEL" \
   --local_model_path "$LOCAL_PATH" \
@@ -68,4 +68,4 @@ python -m lcb_runner.runner.main \
   --release_version "$RELEASE" \
   --n "$N" \
   --temperature "$TEMPERATURE" \
-  > >(tee "$LOG_FILE") 2> >(tee "$ERR_FILE" >&2)
+  2>&1 | tee "$LOG_FILE"
