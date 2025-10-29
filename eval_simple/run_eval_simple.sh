@@ -50,10 +50,12 @@ source ~/LiveCodeBench/.venv/bin/activate
 # Create logs directory if it doesn't exist
 mkdir -p logs
 
-# Generate log and error filenames with timestamp and model name
+# Generate log and error filenames with timestamp and a filesystem-safe model name
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-LOG_FILE="logs/${MODEL}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.log"
-ERR_FILE="logs/${MODEL}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.err"
+MODEL_SAFE=${MODEL//\//_}
+MODEL_SAFE=${MODEL_SAFE// /_}
+LOG_FILE="logs/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.log"
+ERR_FILE="logs/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.err"
 
 echo "Logging to: $LOG_FILE"
 echo "Errors to: $ERR_FILE"
@@ -69,4 +71,5 @@ python -m lcb_runner.runner.main \
   --n "$N" \
   --temperature "$TEMPERATURE" \
   --peft_adapter_path "$LOCAL_PATH" \
-  2>&1 | tee "$LOG_FILE"
+  > >(tee "$LOG_FILE") \
+  2> >(tee "$ERR_FILE" >&2)
