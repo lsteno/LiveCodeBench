@@ -76,15 +76,16 @@ class HFPefTRunner(BaseRunner):
         if len(getattr(self.tokenizer, "added_tokens_decoder", {})) > 0:
             base_model.resize_token_embeddings(len(self.tokenizer))
 
-        self.model = PeftModel.from_pretrained(
+        base_model.config.pad_token_id = self.pad_token_id
+        base_model.config.eos_token_id = self.eos_token_id
+
+        self.peft_model = PeftModel.from_pretrained(
             base_model,
             adapter_path,
             is_trainable=False,
         )
-        self.model.config.pad_token_id = self.pad_token_id
-        self.model.config.eos_token_id = self.eos_token_id
-        self.model.to(self.device)
-        self.model.eval()
+        self.peft_model.to(self.device)
+        self.peft_model.eval()
 
         # Multiprocessing is not supported because the model lives on a single GPU process.
         if getattr(self.args, "multiprocess", 0) not in (0, 1):
@@ -159,7 +160,7 @@ class HFPefTRunner(BaseRunner):
             generation_kwargs["top_p"] = self.args.top_p
 
         with torch.no_grad():
-            output_ids = self.model.generate(
+            output_ids = self.peft_model.generate(
                 **encoded,
                 **generation_kwargs,
             )
