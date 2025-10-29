@@ -44,12 +44,18 @@ export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$HF_HOME/datasets}"
 export HF_DATASETS_OFFLINE="${HF_DATASETS_OFFLINE:-1}"
 export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
-export LOCAL_PATH="~/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k"
 source ~/LiveCodeBench/.venv/bin/activate
+
+# Expand user in the provided local path and fail fast if it is missing
+LOCAL_PATH=$(python -c 'import os,sys; print(os.path.expanduser(sys.argv[1]))' "$LOCAL_PATH")
+if [[ ! -d "$LOCAL_PATH" ]]; then
+  echo "Local path '$LOCAL_PATH' does not exist or is not a directory." >&2
+  exit 1
+fi
   
 # Create logs directory next to this script if it doesn't exist
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-LOG_DIR="../logs"
+LOG_DIR="$SCRIPT_DIR/../logs"
 mkdir -p "$LOG_DIR"
 
 # Generate log and error filenames with timestamp and a filesystem-safe model name
