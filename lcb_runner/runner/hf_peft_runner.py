@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 import torch
@@ -33,8 +34,12 @@ class HFPefTRunner(BaseRunner):
             )
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        base_path = args.local_model_path or model.model_name
-        adapter_path = args.peft_adapter_path
+        base_path = (
+            os.path.expanduser(args.local_model_path)
+            if args.local_model_path
+            else model.model_name
+        )
+        adapter_path = os.path.expanduser(args.peft_adapter_path)
 
         torch_dtype = self._resolve_dtype(args.dtype)
         if self.device.type == "cpu" and torch_dtype in (torch.float16, torch.bfloat16):
