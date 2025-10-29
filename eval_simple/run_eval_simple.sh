@@ -47,15 +47,17 @@ export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
 export LOCAL_PATH="~/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k"
 source ~/LiveCodeBench/.venv/bin/activate
   
-# Create logs directory if it doesn't exist
-mkdir -p logs
+# Create logs directory next to this script if it doesn't exist
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+LOG_DIR="../logs"
+mkdir -p "$LOG_DIR"
 
 # Generate log and error filenames with timestamp and a filesystem-safe model name
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MODEL_SAFE=${MODEL//\//_}
 MODEL_SAFE=${MODEL_SAFE// /_}
-LOG_FILE="logs/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.log"
-ERR_FILE="logs/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.err"
+LOG_FILE="$LOG_DIR/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.log"
+ERR_FILE="$LOG_DIR/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.err"
 
 echo "Logging to: $LOG_FILE"
 echo "Errors to: $ERR_FILE"
