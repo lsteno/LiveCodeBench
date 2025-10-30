@@ -13,7 +13,7 @@ RELEASE="v6"
 SCENARIO="codegeneration"
 N=10
 TEMPERATURE=0.2
-REPETITIONS=5
+REPETITIONS=1
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -64,6 +64,13 @@ BASE_TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MODEL_SAFE=${MODEL//\//_}
 MODEL_SAFE=${MODEL_SAFE// /_}
 
+# Create a batch-specific output folder name if running multiple repetitions
+if [ "$REPETITIONS" -gt 1 ]; then
+  BATCH_SUFFIX="_batch_${BASE_TIMESTAMP}"
+else
+  BATCH_SUFFIX=""
+fi
+
 echo "Running $REPETITIONS repetition(s) of the evaluation..."
 
 # Loop through the number of repetitions
@@ -80,10 +87,15 @@ for ((i=1; i<=REPETITIONS; i++)); do
   echo "Logging to: $LOG_FILE"
   echo "Errors to: $ERR_FILE"
   
+  # Append batch suffix and repetition to model name for output organization
+  MODEL_WITH_REP="${MODEL}${BATCH_SUFFIX}/rep${i}"
+  
+  echo "Output directory: output/${MODEL_WITH_REP}/"
+  
   # Run python with stdout to log file and stderr to err file
   # Using explicit redirection that works in Slurm non-interactive environments
   python -m lcb_runner.runner.main \
-    --model "$MODEL" \
+    --model "$MODEL_WITH_REP" \
     --local_model_path "$LOCAL_PATH" \
     --scenario "$SCENARIO" \
     --evaluate \
