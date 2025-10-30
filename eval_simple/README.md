@@ -44,7 +44,7 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 ```bash
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen/Qwen2.5-72B-Instruct \
+  --model Qwen2.5-1.5B-Prefix5k \
   --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-5k-merged
 ```
 
