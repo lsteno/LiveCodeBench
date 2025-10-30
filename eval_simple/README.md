@@ -44,8 +44,8 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 ```bash
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen2.5-1.5B-Prefix5k \
-  --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-5k-merged
+  --model Qwen/Qwen2.5-7B-Instruct\
+  --local-path ~/GSD-finetune/full_finetune_simple/runs/qwen2.5-1.5b-full-5k-export
 ```
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.
@@ -56,7 +56,7 @@ Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_
 
 ```bash
 python -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/Qwen2.5-1.5B-Prefix5k$/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/Qwen2.5-1.5B-Prefix5k/Scenario.codegeneration_10_0.2_eval_all.json
 ```
 
 ## Notes
