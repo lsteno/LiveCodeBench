@@ -36,8 +36,16 @@ bash eval_simple/run_eval_simple.sh \
   --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-5k-merged
 ```
 
+To run multiple repetitions for statistical analysis:
 
-The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you can override them with extra flags (see file header).
+```bash
+bash eval_simple/run_eval_simple.sh \
+  --model Qwen2.5-3B-Finetuned \
+  --local-path ~/GSD-finetune/qlora_simple/runs/qwen2.5-1.5b-qlora-5k-merged \
+  --repetitions 5
+```
+
+The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, `--repetitions 1`, but you can override them with extra flags (see file header).
 
 ## 3. Run evaluation (SLURM)
 
@@ -45,10 +53,19 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, but you
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
   --model Qwen/Qwen2.5-7B-Instruct\
-  --local-path ~/GSD-finetune/full_finetune_simple/runs/qwen2.5-1.5b-full-5k-export
+  --local-path ~/GSD-finetune/lora_simple/runs/1.5b-lora-50k-r16-merged
 ```
 
-The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`.
+To run multiple repetitions for statistical analysis:
+
+```bash
+sbatch eval_simple/simple_eval.slurm \
+  --model Qwen/Qwen2.5-7B-Instruct\
+  --local-path ~/GSD-finetune/lora_simple/runs/1.5b-lora-50k-r16-merged \
+  --repetitions 5
+```
+
+The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`. Each repetition creates separate log files with `_rep{N}` suffix for easy tracking.
 
 ## Output & Analysis
 
@@ -56,7 +73,7 @@ Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_
 
 ```bash
 python -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/Qwen2.5-1.5B-Prefix5k/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/Qwen2.5-Ins-7B/Scenario.codegeneration_10_0.2_eval_all.json
 ```
 
 ## Notes

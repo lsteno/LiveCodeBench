@@ -13,6 +13,7 @@ RELEASE="v6"
 SCENARIO="codegeneration"
 N=10
 TEMPERATURE=0.2
+REPETITIONS=5
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -22,8 +23,9 @@ while [[ $# -gt 0 ]]; do
     --scenario) SCENARIO="$2"; shift 2 ;;
     --n) N="$2"; shift 2 ;;
     --temperature) TEMPERATURE="$2"; shift 2 ;;
+    --repetitions) REPETITIONS="$2"; shift 2 ;;
     -h|--help)
-      echo "Usage: $0 --model NAME --local-path DIR [--release v6] [--scenario codegeneration] [--n 10] [--temperature 0.2]"
+      echo "Usage: $0 --model NAME --local-path DIR [--release v6] [--scenario codegeneration] [--n 10] [--temperature 0.2] [--repetitions 1]"
       exit 0
       ;;
     *)
@@ -57,28 +59,47 @@ fi
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 LOG_DIR="../logs"
 
-
-# Generate log and error filenames with timestamp and a filesystem-safe model name
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+# Generate a base timestamp for this batch of runs
+BASE_TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MODEL_SAFE=${MODEL//\//_}
 MODEL_SAFE=${MODEL_SAFE// /_}
-LOG_FILE="$LOG_DIR/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.log"
-ERR_FILE="$LOG_DIR/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${TIMESTAMP}.err"
 
-echo "Logging to: $LOG_FILE"
-echo "Errors to: $ERR_FILE"
+echo "Running $REPETITIONS repetition(s) of the evaluation..."
 
-# Run python with stdout to log file and stderr to err file
-# Using explicit redirection that works in Slurm non-interactive environments
-python -m lcb_runner.runner.main \
-  --model "$MODEL" \
-  --local_model_path "$LOCAL_PATH" \
-  --scenario "$SCENARIO" \
-  --evaluate \
-  --release_version "$RELEASE" \
-  --n "$N" \
-  --temperature "$TEMPERATURE" \
-#  --tensor_parallel_size 4 \
-#  --peft_adapter_path "/home/s3221407/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k" \
-  > >(tee "$LOG_FILE") \
-  2> >(tee "$ERR_FILE" >&2)
+# Loop through the number of repetitions
+for ((i=1; i<=REPETITIONS; i++)); do
+  echo ""
+  echo "=========================================="
+  echo "Starting repetition $i of $REPETITIONS"
+  echo "=========================================="
+  
+  # Generate log and error filenames with timestamp, repetition number, and a filesystem-safe model name
+  LOG_FILE="$LOG_DIR/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${BASE_TIMESTAMP}_rep${i}.log"
+  ERR_FILE="$LOG_DIR/${MODEL_SAFE}_${SCENARIO}_${RELEASE}_${BASE_TIMESTAMP}_rep${i}.err"
+  
+  echo "Logging to: $LOG_FILE"
+  echo "Errors to: $ERR_FILE"
+  
+  # Run python with stdout to log file and stderr to err file
+  # Using explicit redirection that works in Slurm non-interactive environments
+  python -m lcb_runner.runner.main \
+    --model "$MODEL" \
+    --local_model_path "$LOCAL_PATH" \
+    --scenario "$SCENARIO" \
+    --evaluate \
+    --release_version "$RELEASE" \
+    --n "$N" \
+    --temperature "$TEMPERATURE" \
+  #  --tensor_parallel_size 4 \
+  #  --peft_adapter_path "/home/s3221407/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k" \
+    > >(tee "$LOG_FILE") \
+    2> >(tee "$ERR_FILE" >&2)
+  
+  echo ""
+  echo "Completed repetition $i of $REPETITIONS"
+done
+
+echo ""
+echo "=========================================="
+echo "All $REPETITIONS repetition(s) completed!"
+echo "=========================================="
