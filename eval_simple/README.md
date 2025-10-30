@@ -56,7 +56,7 @@ Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_
 
 ```bash
 python -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/1.5B-lora-5k-r4/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/Qwen2.5-1.5B-Prefix5k$/Scenario.codegeneration_10_0.2_eval_all.json
 ```
 
 ## Notes

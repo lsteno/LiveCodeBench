@@ -78,6 +78,6 @@ python -m lcb_runner.runner.main \
   --release_version "$RELEASE" \
   --n "$N" \
   --temperature "$TEMPERATURE" \
-  --peft_adapter_path "/home/s3221407//GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k" \
+  --peft_adapter_path "/home/s3221407/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k" \
   > >(tee "$LOG_FILE") \
   2> >(tee "$ERR_FILE" >&2)
