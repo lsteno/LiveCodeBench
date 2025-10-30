@@ -53,7 +53,7 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, `--repe
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
   --model Qwen/Qwen2.5-7B-Instruct\
-  --local-path ~/GSD-finetune/bitfit_simple/runs/1.5b-bitfit-5k-merged \
+  --local-path ~/GSD-finetune/prefix_simple/model_cache/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a \
   --repetitions 5
 ```
 
