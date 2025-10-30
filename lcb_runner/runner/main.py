@@ -180,8 +180,9 @@ def main():
                 metrics[2] = old_eval_results[2] + metrics[2]
         elif args.scenario == Scenario.selfrepair:
             metadatas = metrics[2]
+            output_suffix = os.environ.get("LCB_OUTPUT_SUFFIX", "")
             with open(
-                f"output/{model.model_repr}/{Scenario.codegeneration}_{args.codegen_n}_{args.temperature}_eval_all.json"
+                f"output/{model.model_repr}{output_suffix}/{Scenario.codegeneration}_{args.codegen_n}_{args.temperature}_eval_all.json"
             ) as f:
                 code_gen_evals = json.load(f)
             original_code_lists = [

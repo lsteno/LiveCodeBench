@@ -53,7 +53,8 @@ The script passes through `--release v6`, `--n 10`, `--temperature 0.2`, `--repe
 cd ~/LiveCodeBench
 sbatch eval_simple/simple_eval.slurm \
   --model Qwen/Qwen2.5-7B-Instruct\
-  --local-path ~/GSD-finetune/bitfit_simple/runs/1.5b-bitfit-5k-merged
+  --local-path ~/GSD-finetune/bitfit_simple/runs/1.5b-bitfit-5k-merged \
+  --repetitions 5
 ```
 
 To run multiple repetitions for statistical analysis:
@@ -69,11 +70,25 @@ The job loads Python, activates `.venv`, and executes the same `run_eval_simple.
 
 ## Output & Analysis
 
-Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_0.2*.json`. Use the standard tooling, e.g.:
+Evaluation artefacts land under `output/<model_repr>/Scenario.codegeneration_10_0.2*.json`. 
+
+When running multiple repetitions, results are organized in a batch folder:
+```
+output/<model_repr>_batch_<timestamp>/rep1/
+output/<model_repr>_batch_<timestamp>/rep2/
+...
+```
+
+Use the standard tooling to analyze results, e.g.:
 
 ```bash
+# Single run
 python -m lcb_runner.evaluation.compute_scores \
   --eval_all_file output/Qwen2.5-Ins-7B/Scenario.codegeneration_10_0.2_eval_all.json
+
+# Multiple repetitions - analyze each repetition
+python -m lcb_runner.evaluation.compute_scores \
+  --eval_all_file output/Qwen2.5-Ins-7B_batch_20251030_143022/rep1/Scenario.codegeneration_10_0.2_eval_all.json
 ```
 
 ## Notes
