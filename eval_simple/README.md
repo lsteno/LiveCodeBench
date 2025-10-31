@@ -62,8 +62,8 @@ To run multiple repetitions for statistical analysis:
 
 ```bash
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen/Qwen2.5-7B-Instruct\
-  --local-path ~/GSD-finetune/lora_simple/runs/1.5b-lora-5k-merged \
+  --model Qwen2.5-1.5B-Prefix5k\
+  --local-path ~/GSD-finetune/prefix_simple/model_cache/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a \
   --repetitions 5
 ```
 
@@ -87,7 +87,7 @@ Use the standard tooling to analyze results, e.g.:
 ```bash
 # Single run
 python -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/Qwen2.5-Ins-7B_batch_20251031_123752/rep1/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/1.5B-qlora-5k-r4-full_batch/rep1/Scenario.codegeneration_10_0.2_eval_all.json
 
 # Multiple repetitions - analyze each repetition
 python -m lcb_runner.evaluation.compute_scores \
