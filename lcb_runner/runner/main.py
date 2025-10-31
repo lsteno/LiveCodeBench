@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime, timezone
 
 from lcb_runner.runner.parser import get_args
 from lcb_runner.utils.scenarios import Scenario
@@ -13,6 +14,7 @@ from lcb_runner.runner.scenario_router import (
     sort_and_extract_save_results,
     get_metrics,
 )
+from lcb_runner.utils.gpu_energy import gpu_energy_logger
 
 
 def main():
@@ -61,11 +63,27 @@ def main():
         old_save_results = []
         remaining_benchmark = benchmark
 
-    if len(remaining_benchmark) > 0:
-        runner = build_runner(args, model)
-        results: list[list[str]] = runner.run_main(remaining_benchmark, format_prompt)
-    else:
-        results = []
+    total_instances = len(benchmark)
+    problems_to_run = len(remaining_benchmark)
+    results: list[list[str]]
+
+    with gpu_energy_logger() as energy_summary:
+        if problems_to_run > 0:
+            runner = build_runner(args, model)
+            results = runner.run_main(remaining_benchmark, format_prompt)
+        else:
+            results = []
+
+    energy_record = dict(energy_summary)
+    energy_record.update(
+        {
+            "model": model.model_repr,
+            "scenario": args.scenario.value,
+            "problems_total": total_instances,
+            "problems_run": problems_to_run,
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        }
+    )
 
     combined_results = combine_results(
         args.scenario, results, model, args.cot_code_execution
@@ -87,6 +105,16 @@ def main():
 
     with open(output_path, "w") as f:
         json.dump(save_results, f, indent=4)
+
+    energy_output_path = os.path.splitext(output_path)[0] + "_energy.json"
+    with open(energy_output_path, "w") as f:
+        json.dump(energy_record, f, indent=4)
+
+    if not energy_record.get("nvml_available", False):
+        print(
+            "NVML not available; wrote placeholder energy summary. Install "
+            "nvidia-ml-py and ensure the node exposes NVML for measurements."
+        )
 
     # for i in range(len(combined_results)):
     #     for j in range(len(combined_results[i][1])):

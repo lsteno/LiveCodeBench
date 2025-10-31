@@ -21,6 +21,7 @@ source .venv/bin/activate
 pip install --upgrade pip
 pip install -e .
 pip install 'datasets<3.2.0'
+pip install nvidia-ml-py  # required for GPU energy logging
 
 # Cache evaluation dataset once (needs internet)
 python -c "from datasets import load_dataset; load_dataset('livecodebench/code_generation_lite', split='test', version_tag='v6', trust_remote_code=True)"
@@ -78,6 +79,8 @@ output/<model_repr>_batch_<timestamp>/rep1/
 output/<model_repr>_batch_<timestamp>/rep2/
 ...
 ```
+
+Each run also stores GPU energy usage in `*_energy.json` alongside the main artefacts.
 
 Use the standard tooling to analyze results, e.g.:
 
