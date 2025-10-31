@@ -63,7 +63,7 @@ To run multiple repetitions for statistical analysis:
 ```bash
 sbatch eval_simple/simple_eval.slurm \
   --model Qwen/Qwen2.5-7B-Instruct\
-  --local-path ~/GSD-finetune/lora_simple/runs/1.5b-lora-50k-r16-merged \
+  --local-path ~/GSD-finetune/lora_simple/runs/1.5b-lora-5k-merged \
   --repetitions 5
 ```
 
