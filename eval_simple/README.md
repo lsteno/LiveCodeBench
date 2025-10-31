@@ -62,8 +62,8 @@ To run multiple repetitions for statistical analysis:
 
 ```bash
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen/Qwen2.5-7B-Instruct\
-  --local-path ~/GSD-finetune/model_cache/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a \
+  --model Qwen2.5-1.5B-Prefix5k \
+  --local-path ~/GSD-finetune/prefix_simple/model_cache/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a \
   --repetitions 5
 ```
 
