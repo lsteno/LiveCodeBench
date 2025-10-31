@@ -99,8 +99,8 @@ for ((i=1; i<=REPETITIONS; i++)); do
     --release_version "$RELEASE" \
     --n "$N" \
     --temperature "$TEMPERATURE" \
-    --tensor_parallel_size 2 \
-    --peft_adapter_path "/home/s3221407/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k" \
+#    --tensor_parallel_size 2 \
+#    --peft_adapter_path "/home/s3221407/GSD-finetune/prefix_simple/runs/qwen2.5-1.5b-prefix-5k" \
     > >(tee "$LOG_FILE") \
     2> >(tee "$ERR_FILE" >&2)
   
