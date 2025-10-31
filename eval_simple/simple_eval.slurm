@@ -3,7 +3,7 @@
 #SBATCH --output=logs/simple_eval_%j.out
 #SBATCH --error=logs/simple_eval_%j.err
 #SBATCH --partition=students
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=40G
 #SBATCH --time=20:00:00
