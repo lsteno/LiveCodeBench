@@ -87,7 +87,7 @@ Use the standard tooling to analyze results, e.g.:
 ```bash
 # Single run
 python -m lcb_runner.evaluation.compute_scores \
-  --eval_all_file output/Qwen2.5-Ins-7B/Scenario.codegeneration_10_0.2_eval_all.json
+  --eval_all_file output/Qwen2.5-Ins-7B_batch_20251031_123752/rep1/Scenario.codegeneration_10_0.2_eval_all.json
 
 # Multiple repetitions - analyze each repetition
 python -m lcb_runner.evaluation.compute_scores \
