@@ -9,7 +9,7 @@ set -euo pipefail
 
 MODEL=""
 LOCAL_PATH=""
-RELEASE="v6"
+RELEASE="release_latest"
 SCENARIO="codegeneration"
 N=10
 TEMPERATURE=0.2
