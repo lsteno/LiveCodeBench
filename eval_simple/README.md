@@ -62,9 +62,9 @@ To run multiple repetitions for statistical analysis:
 
 ```bash
 sbatch eval_simple/simple_eval.slurm \
-  --model Qwen2.5-1.5B-Prefix5k \
-  --local-path ~/GSD-finetune/prefix_simple/model_cache/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a \
-  --repetitions 5
+  --model Qwen/Qwen2.5-7B-Instruct \
+  --local-path ~/GSD-finetune/lora_simple/runs/1.5b-lora-100k-r16-merged \
+  --repetitions 1
 ```
 
 The job loads Python, activates `.venv`, and executes the same `run_eval_simple.sh`. Logs live in `logs/simple_eval_<JOB_ID>.(out|err)`. Each repetition creates separate log files with `_rep{N}` suffix for easy tracking.

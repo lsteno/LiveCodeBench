@@ -3,10 +3,10 @@
 #SBATCH --output=logs/simple_eval_%j.out
 #SBATCH --error=logs/simple_eval_%j.err
 #SBATCH --partition=students
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=80G
-#SBATCH --time=12:00:00
+#SBATCH --time=04:00:00
 
 module load python/3.10.7
 
